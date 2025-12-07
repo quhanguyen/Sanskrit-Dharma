@@ -1,23 +1,69 @@
 import React from 'react';
+import { ExternalLink, Check } from 'lucide-react';
 
 const parseInline = (text: string) => {
-    // Split by bold (**), code (`), or italic (*)
-    // Regex explanation:
-    // (\*\*.*?\*\*) matches bold
-    // (`.*?`) matches code
-    // (\*.*?\*) matches italic (lazy match)
-    const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+    // Regex matches:
+    // 1. Images: ![alt](url)
+    // 2. Links: [text](url)
+    // 3. Bold: **text**
+    // 4. Code: `text`
+    // 5. Strikethrough: ~~text~~
+    // 6. Italic: *text*
+    const regex = /(!\[.*?\]\(.*?\))|(\[.*?\]\(.*?\))|(\*\*.*?\*\*)|(`.*?`)|(~~.*?~~)|(\*.*?\*)/g;
+    
+    const parts = text.split(regex).filter(part => part !== undefined && part !== '');
     
     return parts.map((part, index) => {
+        // Images
+        const imgMatch = part.match(/^!\[(.*?)\]\((.*?)\)$/);
+        if (imgMatch) {
+            return (
+                <img 
+                    key={index} 
+                    src={imgMatch[2]} 
+                    alt={imgMatch[1]} 
+                    className="max-w-full h-auto rounded-lg border border-white/10 my-2" 
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+            );
+        }
+
+        // Links
+        const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
+        if (linkMatch) {
+            return (
+                <a 
+                    key={index} 
+                    href={linkMatch[2]} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-indigo-400 hover:text-indigo-300 underline inline-flex items-center gap-0.5"
+                >
+                    {linkMatch[1]} <ExternalLink size={10} />
+                </a>
+            );
+        }
+
+        // Bold
         if (part.startsWith('**') && part.endsWith('**')) {
             return <strong key={index} className="font-bold text-indigo-300">{part.slice(2, -2)}</strong>;
         }
+
+        // Code
         if (part.startsWith('`') && part.endsWith('`')) {
             return <code key={index} className="bg-white/10 px-1.5 py-0.5 rounded font-mono text-[0.85em] text-pink-400 border border-white/10">{part.slice(1, -1)}</code>;
         }
+
+        // Strikethrough
+        if (part.startsWith('~~') && part.endsWith('~~')) {
+            return <del key={index} className="text-slate-500 decoration-slate-500">{part.slice(2, -2)}</del>;
+        }
+
+        // Italic
         if (part.startsWith('*') && part.endsWith('*')) {
             return <em key={index} className="italic text-emerald-300/90">{part.slice(1, -1)}</em>;
         }
+
         return part;
     });
 };
@@ -97,12 +143,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ text, isUser }) => 
             const trimmed = line.trim();
             const key = `${blockIdx}-${lineIdx}`;
 
+            // Handle Tables
             if (trimmed.startsWith('|')) {
                 inTable = true;
                 tableBuffer.push(trimmed);
                 return;
             } else if (inTable) {
-                // End of table
                 if (tableBuffer.length > 0) {
                     elements.push(renderTable(tableBuffer, `${key}-table`));
                     tableBuffer = [];
@@ -111,45 +157,89 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ text, isUser }) => 
             }
 
             if (!trimmed) {
-                elements.push(<div key={key} className="h-1" />);
+                elements.push(<div key={key} className="h-2" />);
                 return;
             }
-            if (trimmed.startsWith('> ')) {
-                elements.push(<div key={key} className="border-l-4 border-indigo-500 bg-indigo-500/10 pl-3 py-2 italic text-slate-300 rounded-r-lg my-1">{parseInline(trimmed.slice(2))}</div>);
+
+            // Horizontal Rule (---, ***, ___)
+            if (/^([-*_])\1{2,}$/.test(trimmed)) {
+                elements.push(<hr key={key} className="my-6 border-white/20" />);
                 return;
             }
-            if (trimmed.startsWith('### ')) {
-                elements.push(<h3 key={key} className="font-bold text-base md:text-lg mt-3 mb-1 text-purple-400">{parseInline(trimmed.slice(4))}</h3>);
+
+            // Headings
+            if (trimmed.startsWith('# ')) {
+                elements.push(<h1 key={key} className="font-serif font-bold text-2xl md:text-3xl mt-6 mb-3 text-indigo-300 border-b border-indigo-500/30 pb-2">{parseInline(trimmed.slice(2))}</h1>);
                 return;
             }
             if (trimmed.startsWith('## ')) {
-                elements.push(<h2 key={key} className="font-bold text-lg md:text-xl mt-3 mb-1 text-indigo-400 border-b border-indigo-500/30 pb-1">{parseInline(trimmed.slice(3))}</h2>);
+                elements.push(<h2 key={key} className="font-serif font-bold text-xl md:text-2xl mt-5 mb-2 text-indigo-400">{parseInline(trimmed.slice(3))}</h2>);
                 return;
             }
-            if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+            if (trimmed.startsWith('### ')) {
+                elements.push(<h3 key={key} className="font-bold text-lg md:text-xl mt-4 mb-2 text-purple-400">{parseInline(trimmed.slice(4))}</h3>);
+                return;
+            }
+            if (trimmed.startsWith('#### ')) {
+                elements.push(<h4 key={key} className="font-bold text-base md:text-lg mt-3 mb-1 text-emerald-400 uppercase tracking-wide">{parseInline(trimmed.slice(5))}</h4>);
+                return;
+            }
+            if (trimmed.startsWith('##### ')) {
+                elements.push(<h5 key={key} className="font-bold text-sm md:text-base mt-2 mb-1 text-slate-300">{parseInline(trimmed.slice(6))}</h5>);
+                return;
+            }
+
+            // Blockquote
+            if (trimmed.startsWith('> ')) {
+                elements.push(<div key={key} className="border-l-4 border-indigo-500 bg-indigo-500/10 pl-4 py-2 italic text-slate-300 rounded-r-lg my-2">{parseInline(trimmed.slice(2))}</div>);
+                return;
+            }
+
+            // Task Lists
+            // - [ ] Task
+            // - [x] Completed
+            const taskMatch = trimmed.match(/^- \[( |x)\] (.*)/);
+            if (taskMatch) {
+                const isChecked = taskMatch[1] === 'x';
                 elements.push(
-                    <div key={key} className="flex gap-2 ml-1 items-start">
-                        <span className={`min-w-[6px] mt-2 h-1.5 w-1.5 rounded-full shrink-0 ${isUser ? 'bg-indigo-300' : 'bg-indigo-500'}`}></span>
-                        <span className="flex-1">{parseInline(trimmed.slice(2))}</span>
+                    <div key={key} className="flex gap-3 items-start my-1 ml-1 group">
+                         <div className={`mt-1 w-4 h-4 rounded border flex items-center justify-center transition-colors ${isChecked ? 'bg-indigo-500 border-indigo-500' : 'border-slate-500 bg-transparent'}`}>
+                             {isChecked && <Check size={12} className="text-white" />}
+                         </div>
+                         <span className={`${isChecked ? 'text-slate-500 line-through' : 'text-slate-200'}`}>{parseInline(taskMatch[2])}</span>
                     </div>
                 );
                 return;
             }
+
+            // Bullet Lists
+            if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('+ ')) {
+                elements.push(
+                    <div key={key} className="flex gap-2 ml-1 items-start my-1">
+                        <span className={`min-w-[6px] mt-2 h-1.5 w-1.5 rounded-full shrink-0 ${isUser ? 'bg-indigo-300' : 'bg-indigo-500'}`}></span>
+                        <span className="flex-1 leading-relaxed">{parseInline(trimmed.slice(2))}</span>
+                    </div>
+                );
+                return;
+            }
+
+            // Numbered Lists
             if (/^\d+\.\s/.test(trimmed)) {
                  const [number, ...rest] = trimmed.split('.');
                  elements.push(
-                    <div key={key} className="flex gap-2 ml-1 items-start">
-                        <span className="font-mono font-bold text-indigo-400 text-sm mt-0.5">{number}.</span>
-                        <span className="flex-1">{parseInline(rest.join('.').trim())}</span>
+                    <div key={key} className="flex gap-2 ml-1 items-start my-1">
+                        <span className="font-mono font-bold text-indigo-400 text-sm mt-0.5 min-w-[1.2rem]">{number}.</span>
+                        <span className="flex-1 leading-relaxed">{parseInline(rest.join('.').trim())}</span>
                     </div>
                  );
                  return;
             }
 
-            elements.push(<p key={key} className="min-h-[1em] leading-relaxed">{parseInline(line)}</p>);
+            // Paragraph
+            elements.push(<p key={key} className="min-h-[1em] leading-relaxed my-1">{parseInline(line)}</p>);
         });
         
-        // Flush remaining table if any (e.g. table at end of message)
+        // Flush remaining table if any
         if (tableBuffer.length > 0) {
              elements.push(renderTable(tableBuffer, `${blockIdx}-end-table`));
         }

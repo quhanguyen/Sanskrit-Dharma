@@ -124,6 +124,130 @@ export const SAMPLE_LESSONS: Lesson[] = [
   },
   {
     id: 1,
+    title: "Vyanjana: Phụ Âm (Nhóm Ka)",
+    category: "Căn Bản",
+    description: "Nhóm phụ âm đầu tiên: Kanthya (Âm họng). Phát ra từ cuống họng.",
+    content: [
+      {
+        sanskrit: "क",
+        iast: "ka",
+        english: "Like 'k' in 'skate' (unaspirated).",
+        vietnamese: "Âm 'c' hoặc 'k'. Không bật hơi. Đọc gọn.",
+        explanation: "Phụ âm đầu tiên, tượng trưng cho Brahma (Đấng sáng tạo).",
+        vocabulary: [
+          { word: "कमल", iast: "kamala", meaning: "Hoa sen", detail: "Biểu tượng của sự tinh khiết." },
+          { word: "कर्म", iast: "karma", meaning: "Hành động/Nghiệp", detail: "Luật nhân quả." }
+        ]
+      },
+      {
+        sanskrit: "ख",
+        iast: "kha",
+        english: "Like 'ck-h' in 'blockhead' (aspirated).",
+        vietnamese: "Âm 'kh' bật hơi mạnh. Đẩy khí từ họng ra.",
+        explanation: "Khoảng không, bầu trời.",
+        vocabulary: [
+          { word: "खग", iast: "khaga", meaning: "Chim", detail: "Nghĩa đen: Kẻ đi trong không gian." }
+        ]
+      },
+      {
+        sanskrit: "ग",
+        iast: "ga",
+        english: "Like 'g' in 'gate'.",
+        vietnamese: "Âm 'g'. Đọc như 'g' trong 'gà'.",
+        explanation: "Chuyển động, đi tới (Gam).",
+        vocabulary: [
+          { word: "गुरु", iast: "guru", meaning: "Người thầy", detail: "Người xua tan bóng tối (gu-ru)." },
+          { word: "गणेश", iast: "gaṇeśa", meaning: "Thần Ganesha", detail: "Vị thần của sự khởi đầu." }
+        ]
+      },
+      {
+        sanskrit: "घ",
+        iast: "gha",
+        english: "Like 'g-h' in 'log-hut' (aspirated).",
+        vietnamese: "Âm 'g' bật hơi. Đọc 'g' kèm luồng hơi mạnh từ ngực.",
+        explanation: "Sự nén chặt.",
+        vocabulary: [
+          { word: "घट", iast: "ghaṭa", meaning: "Cái bình", detail: "Vật chứa đựng." }
+        ]
+      },
+      {
+        sanskrit: "ङ",
+        iast: "ṅa",
+        english: "Like 'n' in 'sing'.",
+        vietnamese: "Âm 'ng'. Như 'ng' trong 'ngang'.",
+        explanation: "Âm mũi của nhóm họng.",
+        vocabulary: [
+          { word: "गङ्गा", iast: "gaṅgā", meaning: "Sông Hằng", detail: "Dòng sông thiêng liêng nhất Ấn Độ." }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Vyakarana: Động Từ (Dhaturupa)",
+    category: "Ngữ Pháp",
+    description: "Làm quen với cấu trúc động từ cơ bản trong thì Hiện tại (Lat Lakara).",
+    content: [
+      {
+        sanskrit: "पुरुष & वचन",
+        iast: "puruṣa & vacana",
+        english: "Person & Number",
+        vietnamese: "Ngôi & Số",
+        explanation: "Sanskrit có 3 ngôi (1, 2, 3) và đặc biệt có 3 số: Số ít (Eka), Số đôi (Dvi), Số nhiều (Bahu).",
+        vocabulary: [
+          { word: "पठति", iast: "paṭhati", meaning: "Anh ấy đọc", detail: "Ngôi 3, số ít." },
+          { word: "पठतः", iast: "paṭhataḥ", meaning: "Hai người đọc", detail: "Ngôi 3, số đôi." },
+          { word: "पठन्ति", iast: "paṭhanti", meaning: "Họ đọc", detail: "Ngôi 3, số nhiều." }
+        ]
+      },
+      {
+        sanskrit: "वद्",
+        iast: "vad",
+        english: "To speak",
+        vietnamese: "Căn động từ: Nói",
+        explanation: "Chia động từ 'Vad' ở ngôi thứ 3 (Sah - Anh ấy/Cô ấy).",
+        vocabulary: [
+          { word: "वदति", iast: "vadati", meaning: "Nói (Số ít)", detail: "Sah vadati (Anh ấy nói)." },
+          { word: "वदतः", iast: "vadataḥ", meaning: "Nói (Số đôi)", detail: "Tau vadataḥ (Hai người nói)." },
+          { word: "वदन्ति", iast: "vadanti", meaning: "Nói (Số nhiều)", detail: "Te vadanti (Họ nói)." }
+        ]
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Sambhashanam: Giao Tiếp",
+    category: "Giao Tiếp",
+    description: "Những câu thoại ngắn dùng trong đời sống hàng ngày.",
+    content: [
+      {
+        sanskrit: "अभिवादनम्",
+        iast: "abhivādanam",
+        english: "Greetings",
+        vietnamese: "Chào hỏi cơ bản",
+        explanation: "Cách chào hỏi lễ phép trong văn hóa Ấn Độ.",
+        vocabulary: [
+          { word: "नमस्ते", iast: "namaste", meaning: "Xin chào", detail: "Tôi cúi chào cái thiêng liêng trong bạn." },
+          { word: "सुप्रभातम्", iast: "suprabhātam", meaning: "Chào buổi sáng", detail: "Chúc một buổi sáng tốt lành." },
+          { word: "शुभरात्रिः", iast: "śubharātriḥ", meaning: "Chúc ngủ ngon", detail: "Một đêm an lành." }
+        ]
+      },
+      {
+        sanskrit: "परिचयः",
+        iast: "paricayaḥ",
+        english: "Introduction",
+        vietnamese: "Giới thiệu bản thân",
+        explanation: "Hỏi tên và trả lời.",
+        vocabulary: [
+          { word: "भवतः नाम किम्?", iast: "bhavataḥ nāma kim?", meaning: "Tên bạn (nam) là gì?", detail: "Dùng cho nam giới." },
+          { word: "भवत्याः नाम किम्?", iast: "bhavatyāḥ nāma kim?", meaning: "Tên bạn (nữ) là gì?", detail: "Dùng cho nữ giới." },
+          { word: "मम नाम...", iast: "mama nāma...", meaning: "Tên tôi là...", detail: "Điền tên bạn vào sau." }
+        ]
+      }
+    ]
+  },
+  {
+    id: 4,
     title: "Gayatri Mantra",
     category: "Mantra",
     description: "Câu thần chú mẹ của mọi thần chú, cầu nguyện sự khai sáng trí tuệ từ ánh sáng mặt trời thiêng liêng.",

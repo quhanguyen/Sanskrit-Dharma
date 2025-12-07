@@ -98,7 +98,7 @@ export const generateSpeech = async (text: string): Promise<string | undefined> 
     const ai = getClient();
     // Clean markdown for TTS
     const cleanText = text.replace(/[\*#`\-\[\]>|]/g, '').trim();
-    const ttsPrompt = `Say in Sanskrit specifically (if Sanskrit) or Vietnamese (if explanation), slowly and clearly: "${cleanText}"`;
+    const ttsPrompt = `Say in Sanskrit specifically (if Sanskrit) or Vietnamese (if explanation), clearly: "${cleanText}"`;
     
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-preview-tts',
